@@ -6,6 +6,27 @@ import (
 )
 
 func SetStandartLibrary(env *Env) {
+	env.SetFunc(">", func(args ...Value) (Value, error) {
+		first := args[0]
+		second := args[1]
+
+		f, ok := first.(Number)
+		if !ok {
+			return nil, fmt.Errorf("expected number, got: %v", first)
+		}
+
+		s, ok := second.(Number)
+		if !ok {
+			return nil, fmt.Errorf("expected number, got %v", second)
+		}
+
+		if f > s {
+			return True, nil
+		} else {
+			return False, nil
+		}
+	})
+
 	env.SetFunc("==", func(args ...Value) (Value, error) {
 		first := args[0]
 		second := args[1]
