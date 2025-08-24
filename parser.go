@@ -104,7 +104,6 @@ func Read(tokens []string) (Value, []string, error) {
 	} else if token == ")" {
 		return nil, tokens, errors.New("unexpected )")
 	} else {
-		fmt.Println(token, "on atom")
 		return atom(token), tokens, nil
 	}
 }
