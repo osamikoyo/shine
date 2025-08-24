@@ -1,0 +1,5 @@
+(define x 10)
+(define add (lambda (x y) (+ x y)))
+(define result (add x 5))
+(define check (if (> result 14) "big" "small"))
+(quote (result is check))
