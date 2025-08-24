@@ -8,6 +8,12 @@ type (
 	String string
 	Bool   bool
 	Func   func(args ...Value) (Value, error)
+
+	Lambda struct {
+		params List
+		body   Value
+		env    *Env
+	}
 )
 
 var (
