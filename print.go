@@ -7,25 +7,27 @@ import (
 
 func Print(v Value) string {
 	switch val := v.(type) {
+	case Number:
+		return fmt.Sprintf("%g", val)
 	case String:
-		return fmt.Sprintf("\"%s\"", val) // Печатаем строки с кавычками
-	case List:
-		strs := []string{}
-		for _, item := range val {
-			strs = append(strs, Print(item))
-		}
-		return "(" + strings.Join(strs, " ") + ")"
+		return fmt.Sprintf("%q", string(val))
 	case Symbol:
 		return string(val)
-	case Number:
-		return fmt.Sprintf("%d", val)
 	case Bool:
 		if val {
 			return "true"
 		}
 		return "false"
+	case List:
+		parts := []string{}
+		for _, item := range val {
+			parts = append(parts, Print(item))
+		}
+		return "(" + strings.Join(parts, " ") + ")"
 	case Func:
 		return "<function>"
+	case Lambda:
+		return "<lambda>"
 	default:
 		return "nil"
 	}
