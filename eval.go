@@ -54,8 +54,7 @@ func Eval(value Value, env *Env) (Value, error) {
 				return nil, fmt.Errorf("let first argument must to be list")
 			}
 
-			newEnv := NewEnv()
-			newEnv.funcs = env.funcs
+			newEnv := NewEnv(env)
 
 			for _, binding := range bindings {
 				bindList, ok := binding.(List)
@@ -68,7 +67,7 @@ func Eval(value Value, env *Env) (Value, error) {
 					return nil, fmt.Errorf("bindlist first argument must be symbol")
 				}
 
-				val, err := Eval(bindList[1], env)
+				val, err := Eval(bindList[1], newEnv)
 				if err != nil {
 					return nil, err
 				}
@@ -93,7 +92,7 @@ func Eval(value Value, env *Env) (Value, error) {
 				}
 			}
 			body := rest[1]
-			return Lambda{params: params, body: body, env: env}, nil
+			return Lambda{params: params, body: body, env: NewEnv(env)}, nil
 		}
 
 		if sym, ok := first.(Symbol); ok && sym == "if" {
@@ -104,6 +103,7 @@ func Eval(value Value, env *Env) (Value, error) {
 			if err != nil {
 				return nil, err
 			}
+			fmt.Println("If condition result:", Print(condition))
 			if condition != Nil && condition != False {
 				return Eval(rest[1], env)
 			} else if len(rest) == 3 {
@@ -111,23 +111,21 @@ func Eval(value Value, env *Env) (Value, error) {
 			}
 			return Nil, nil
 		}
-
 		proc, err := Eval(first, env)
 		if err != nil {
 			return nil, err
 		}
-
 		if lam, ok := proc.(Lambda); ok {
 			if len(rest) != len(lam.params) {
 				return nil, fmt.Errorf("lambda expects %d arguments, got %d", len(lam.params), len(rest))
 			}
-			newEnv := NewEnv()
-			newEnv.funcs = lam.env.funcs
+			newEnv := NewEnv(lam.env)
 			for i, param := range lam.params {
 				val, err := Eval(rest[i], env)
 				if err != nil {
 					return nil, err
 				}
+				fmt.Println("Binding", param, "to", Print(val))
 				newEnv.SetVariable(param.(Symbol), val)
 			}
 			return Eval(lam.body, newEnv)
