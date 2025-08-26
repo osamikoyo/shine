@@ -6,6 +6,144 @@ import (
 )
 
 func SetStandartLibrary(env *Env) {
+	env.SetFunc("abs", func(args ...Value) (Value, error) {
+		x, ok := args[0].(Number)
+		if !ok {
+			return nil, fmt.Errorf("expected number, got %v", Print(args[0]))
+		}
+		if x < 0 {
+			return -x, nil
+		}
+		return x, nil
+	})
+
+	env.SetFunc("++", func(args ...Value) (Value, error) {
+		arg := args[0]
+
+		count, ok := arg.(Number)
+		if !ok {
+			return nil, fmt.Errorf("excepts number, got: %v", arg)
+		}
+
+		count++
+
+		return count, nil
+	})
+
+	env.SetFunc("--", func(args ...Value) (Value, error) {
+		arg := args[0]
+
+		count, ok := arg.(Number)
+		if !ok {
+			return nil, fmt.Errorf("excepts number, got: %v", arg)
+		}
+
+		count--
+
+		return count, nil
+	})
+
+	env.SetFunc("<=", func(args ...Value) (Value, error) {
+		first := args[0]
+		second := args[1]
+
+		f, ok := first.(Number)
+		if !ok {
+			return nil, fmt.Errorf("expected number, got: %v", first)
+		}
+
+		s, ok := second.(Number)
+		if !ok {
+			return nil, fmt.Errorf("expected number, got %v", second)
+		}
+
+		if f <= s {
+			return True, nil
+		}
+		return False, nil
+	})
+	env.SetFunc(">=", func(args ...Value) (Value, error) {
+		first := args[0]
+		second := args[1]
+
+		f, ok := first.(Number)
+		if !ok {
+			return nil, fmt.Errorf("excepts number, got: %v", first)
+		}
+
+		s, ok := second.(Number)
+		if !ok {
+			return nil, fmt.Errorf("excepts number, got: %v", second)
+		}
+
+		if f >= s {
+			return True, nil
+		} else {
+			return False, nil
+		}
+	})
+
+	env.SetFunc("||", func(args ...Value) (Value, error) {
+		first := args[0]
+		second := args[1]
+
+		f, ok := first.(Bool)
+		if !ok {
+			return nil, fmt.Errorf("excepts bool: %v", first)
+		}
+
+		s, ok := second.(Bool)
+		if !ok {
+			return nil, fmt.Errorf("excepts bool: %v", second)
+		}
+
+		if s || f {
+			return True, nil
+		} else {
+			return False, nil
+		}
+	})
+	env.SetFunc("&&", func(args ...Value) (Value, error) {
+		first := args[0]
+		second := args[1]
+
+		f, ok := first.(Bool)
+		if !ok {
+			return nil, fmt.Errorf("excepts bool: %v", first)
+		}
+
+		s, ok := second.(Bool)
+		if !ok {
+			return nil, fmt.Errorf("excepts bool: %v", second)
+		}
+
+		if s && f {
+			return True, nil
+		} else {
+			return False, nil
+		}
+	})
+
+	env.SetFunc("<", func(args ...Value) (Value, error) {
+		first := args[0]
+		second := args[1]
+
+		f, ok := first.(Number)
+		if !ok {
+			return nil, fmt.Errorf("expected number, got: %v", first)
+		}
+
+		s, ok := second.(Number)
+		if !ok {
+			return nil, fmt.Errorf("expected number, got %v", second)
+		}
+
+		if f < s {
+			return True, nil
+		} else {
+			return False, nil
+		}
+	})
 	env.SetFunc(">", func(args ...Value) (Value, error) {
 		first := args[0]
 		second := args[1]
