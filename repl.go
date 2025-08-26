@@ -9,7 +9,7 @@ type Repl struct {
 }
 
 func NewRepl() *Repl {
-	env := NewEnv()
+	env := NewEnv(nil)
 	SetStandartLibrary(env)
 
 	return &Repl{
