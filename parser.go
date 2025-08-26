@@ -71,6 +71,9 @@ func atom(token string) Value {
 	if token == "true" {
 		return Bool(true)
 	}
+	if token == "false" {
+		return Bool(false)
+	}
 	if token == "nil" {
 		return Nil
 	}
