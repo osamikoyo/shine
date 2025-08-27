@@ -6,6 +6,13 @@ import (
 )
 
 func SetStandartLibrary(env *Env) {
+	env.SetFunc("$", func(args ...Value) (Value, error) {
+		var list []Value
+
+		list = append(list, args...)
+
+		return List(list), nil
+	})
 	env.SetFunc("abs", func(args ...Value) (Value, error) {
 		x, ok := args[0].(Number)
 		if !ok {
