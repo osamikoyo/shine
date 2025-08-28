@@ -1,11 +1,20 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 )
 
 func SetStandartLibrary(env *Env) {
+	env.SetFunc("error", func(args ...Value) (Value, error) {
+		msg, ok := args[0].(String)
+		if !ok {
+			return nil, fmt.Errorf("excepts strings, got: %v", args[0])
+		}
+
+		return nil, errors.New(string(msg))
+	})
 	env.SetFunc("$", func(args ...Value) (Value, error) {
 		var list []Value
 
