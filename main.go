@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-var OutputLevel string = "base"
+var outmanager *OutputManager
 
 func runWithFile(filename string, repl *Repl) error {
 	code, err := os.ReadFile(filename)
@@ -14,7 +14,7 @@ func runWithFile(filename string, repl *Repl) error {
 		fmt.Printf("Error reading file %s: %v\n", filename, err)
 		return err
 	}
-	fmt.Println("Input from file:", string(code))
+	outmanager.Println("high", "from file: ", code)
 
 	err = repl.StartRepl(string(code))
 	if err != nil {
@@ -52,16 +52,15 @@ func runForLibs(dirs []string, repl *Repl) error {
 
 func main() {
 	var (
-		dirs []string
-		file string
+		dirs        []string
+		file        string
+		outputlevel = "base"
 	)
-
-	repl := NewRepl()
 
 	for i, arg := range os.Args {
 		switch arg {
 		case "--output-level":
-			OutputLevel = os.Args[i+1]
+			outputlevel = os.Args[i+1]
 
 		case "--lib":
 			dirs = append(dirs, os.Args[i+1])
@@ -71,6 +70,9 @@ func main() {
 		}
 	}
 
+	outmanager = NewOutputManager(outputlevel)
+
+	repl := NewRepl(nil)
 	if len(dirs) != 0 {
 		if err := runForLibs(dirs, repl); err != nil {
 			fmt.Println(err)
