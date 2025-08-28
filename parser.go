@@ -59,12 +59,12 @@ func Tokenize(code string) []string {
 		tokens = append(tokens, current.String())
 	}
 
-	fmt.Println("tokens:", tokens)
+	outmanager.Println("high", "tokens: ", tokens)
 	return tokens
 }
 
 func atom(token string) Value {
-	fmt.Println(token, "on atom")
+	outmanager.Println("high", token, " on atom")
 	if num, err := strconv.ParseFloat(token, 64); err == nil {
 		return Number(num)
 	}
