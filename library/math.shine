@@ -1,4 +1,10 @@
 (define square (lambda (x) (* x x)))
 (define sqrt-iter (lambda (n guess) (if (< (abs (- (* guess guess) n)) 0.0001) guess (sqrt-iter n (/ (+ guess (/ n guess)) 2)))))
 
-(define sqrt (lambda (n) (if (<= n 0) 0 (sqrt-iter n 1))))
+(define sqrt
+  (lambda (n)
+    (if (< n 0)
+        (error "sqrt of negative number")
+        (if (<= n 0)
+            0
+            (sqrt-iter n 1)))))
