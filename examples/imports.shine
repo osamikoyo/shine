@@ -1,0 +1,3 @@
+(import "examples/math.shine")
+
+(add 3 56)
