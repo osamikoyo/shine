@@ -3,6 +3,7 @@ package main
 type (
 	Symbol string
 	Value  interface{}
+	Error  string
 	List   []Value
 	Number float64
 	String string
