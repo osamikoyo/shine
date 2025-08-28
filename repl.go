@@ -8,12 +8,18 @@ type Repl struct {
 	env *Env
 }
 
-func NewRepl() *Repl {
-	env := NewEnv(nil)
-	SetStandartLibrary(env)
+func NewRepl(env *Env) *Repl {
+	if env == nil {
+		env := NewEnv(nil)
+		SetStandartLibrary(env)
 
-	return &Repl{
-		env: env,
+		return &Repl{
+			env: env,
+		}
+	} else {
+		return &Repl{
+			env: env,
+		}
 	}
 }
 
