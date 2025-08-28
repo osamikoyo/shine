@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 )
 
 func Eval(value Value, env *Env) (Value, error) {
@@ -28,6 +29,22 @@ func Eval(value Value, env *Env) (Value, error) {
 			return rest[0], nil
 		}
 
+		if sym, ok := first.(Symbol); ok && sym == "import" {
+			switch v := rest[0].(type) {
+			case String:
+				code, err := os.ReadFile(string(v))
+				if err != nil {
+					return nil, err
+				}
+
+				repl := NewRepl(env)
+				if err = repl.StartRepl(string(code)); err != nil {
+					return nil, err
+				}
+
+				return Nil, err
+			}
+		}
 		if sym, ok := first.(Symbol); ok && sym == "define" {
 			if len(rest) != 2 {
 				return nil, fmt.Errorf("define expects exactly two arguments")
