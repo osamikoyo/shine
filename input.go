@@ -15,6 +15,11 @@ func RouteInput(repl *Repl, history string) error {
 		Prompt:       "shine~~> ",
 		HistoryFile:  history,
 		HistoryLimit: 100,
+		AutoComplete: readline.NewPrefixCompleter(
+			readline.PcItem("define"),
+			readline.PcItem("lambda"),
+			readline.PcItem("concat"),
+			readline.PcItem("if")),
 	}
 
 	rl, err := readline.NewEx(&config)
