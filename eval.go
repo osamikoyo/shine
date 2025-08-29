@@ -29,6 +29,14 @@ func Eval(value Value, env *Env) (Value, error) {
 			return rest[0], nil
 		}
 
+		if sym, ok := first.(Symbol); ok && sym == "define-dict" {
+			name, ok := rest[0].(String)
+			if !ok {
+				return nil, fmt.Errorf("expects symbol, got: %v", rest[0])
+			}
+
+			env.SetVariable(Symbol(name), Dictionary(make(map[string]Value)))
+		}
 		if sym, ok := first.(Symbol); ok && sym == "import" {
 			switch v := rest[0].(type) {
 			case String:
@@ -43,6 +51,23 @@ func Eval(value Value, env *Env) (Value, error) {
 				}
 
 				return Nil, err
+			case List:
+				for _, arg := range v {
+					path, ok := arg.(String)
+					if !ok {
+						return nil, fmt.Errorf("expects string, got: %v", arg)
+					}
+
+					code, err := os.ReadFile(string(path))
+					if err != nil {
+						return nil, err
+					}
+
+					repl := NewRepl(env)
+					if err = repl.StartRepl(string(code)); err != nil {
+						return nil, err
+					}
+				}
 			}
 		}
 		if sym, ok := first.(Symbol); ok && sym == "define" {
