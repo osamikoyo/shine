@@ -7,6 +7,34 @@ import (
 )
 
 func SetStandartLibrary(env *Env) {
+	env.SetFunc("set", func(args ...Value) (Value, error) {
+		dict, ok := args[0].(Symbol)
+		if !ok {
+			return nil, fmt.Errorf("excepts symbol, got: %v", args[0])
+		}
+
+		key, ok := args[1].(String)
+		if !ok {
+			return nil, fmt.Errorf("excepts string, got: %v", args[1])
+		}
+
+		res, ok := env.GetVariable(dict)
+		if !ok {
+			return nil, fmt.Errorf("unknown variable: %v", dict)
+		}
+
+		resMap, ok := res.(Dictionary)
+		if !ok {
+			return nil, fmt.Errorf("expects dictionary, got: %v", res)
+		}
+
+		resMap[string(key)] = args[2]
+
+		env.SetVariable(dict, resMap)
+
+		return args[2], nil
+	})
+
 	env.SetFunc("error", func(args ...Value) (Value, error) {
 		msg, ok := args[0].(String)
 		if !ok {
